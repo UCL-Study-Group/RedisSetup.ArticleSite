@@ -38,4 +38,9 @@ public class CacheService
     {
         await _redisContext.DeleteAsync(key);
     }
+
+    public async Task ResetAsync()
+    {
+        await _redisContext.FlushAsync();
+    }
 }

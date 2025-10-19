@@ -26,13 +26,13 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("{id:int}")]  // Fixed route format
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<User>> GetUserAsync([FromRoute] int id, CancellationToken cancellationToken)
     {
         var response = await _userService.GetUserAsync(id, cancellationToken);
 
         if (response is null)
-            return NotFound();  // Changed from NoContent to NotFound
+            return NotFound();
         
         return Ok(response);
     }

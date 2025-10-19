@@ -61,4 +61,9 @@ public class RedisContext
         
         await _database.KeyDeleteAsync(key);
     }
+
+    public async Task FlushAsync()
+    {
+        await _server.FlushAllDatabasesAsync();
+    }
 }

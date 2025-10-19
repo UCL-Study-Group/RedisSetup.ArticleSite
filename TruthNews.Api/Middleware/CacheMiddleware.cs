@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using TruthNews.Infrastructure.Services;
 
 namespace TruthNews.Api.Middleware;
@@ -21,21 +22,33 @@ public class CacheMiddleware
             return;
         }
         
+        // Seems like it ran into an issue where it also tried to cache the swagger documentation O_o
+        var path = context.Request.Path.Value?.ToLowerInvariant() ?? string.Empty;
+        if (path.StartsWith("/swagger") || 
+            path.StartsWith("/openapi") || 
+            path.Contains(".json") ||
+            path.Contains(".css") ||
+            path.Contains(".js"))
+        {
+            await _next(context);
+            return;
+        }
+        
         var cacheKey = GenerateCacheKey(context.Request);
+        var totalStopwatch = Stopwatch.StartNew();
         
         var cachedResponse = await _cacheService.GetAsync(cacheKey);
 
-        // This is used if the CacheService finds a match
+        // Cache hit - return from Redis
         if (!string.IsNullOrEmpty(cachedResponse))
         {
-            Console.WriteLine($"[CacheMiddleware] Found hit for key: {cacheKey}");
+            totalStopwatch.Stop();
+            Console.WriteLine($"[CacheMiddleware] Found hit for key: {cacheKey}, within {totalStopwatch.ElapsedMilliseconds}ms");
+            
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(cachedResponse);
-
             return;
         }
-
-        Console.WriteLine($"[CacheMiddleware] No hit for key: {cacheKey}");
         
         // Capture the response so we can cache it
         var originalBodyStream = context.Response.Body;
@@ -53,8 +66,10 @@ public class CacheMiddleware
         if (context.Response.StatusCode == 200 && !string.IsNullOrEmpty(responseText))
         {
             await _cacheService.SetAsync(cacheKey, responseText);
-            Console.WriteLine($"[CacheMiddleware] Cached response for key: {cacheKey}");
         }
+        
+        totalStopwatch.Stop();
+        Console.WriteLine($"[CacheMiddleware] No hit for key: {cacheKey}, took {totalStopwatch.ElapsedMilliseconds}ms");
         
         // Send the response to the client
         responseBody.Seek(0, SeekOrigin.Begin);
