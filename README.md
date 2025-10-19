@@ -96,3 +96,31 @@ public async Task SetAsync(string key, T value)
     await _database.StringSetAsync(key, serialized, _expirationTime);
 }
 ```
+
+## Conclusion
+
+So to answer the quesiton we've all been waiting for... or at least I did. Using Redis as a caching database
+for our backend has significally improved the performance of our requests. Here's a few examples from our endpoints
+
+### Articles
+
+Here I'm using the `/Articles` endpoint. Here we see and 470ms decrease in time to get all articles!
+
+```
+[CacheMiddleware] No hit for key: cache:/article, took 476ms
+[CacheMiddleware] Found hit for key: cache:/article, within 0ms
+```
+
+### User
+
+The same goes for our `/User/{id}`. Its time has decreased by 160ms. 
+
+```
+[CacheMiddleware] No hit for key: cache:/user/1, took 160ms
+[CacheMiddleware] Found hit for key: cache:/user/1, within 0ms
+```
+
+Therefore I think it is safe to conclude that using cache databases such as Redis does have its benefits
+when it comes to improving the performance of our backend. Though there's also a point to be made whether
+these exact examples are good enough to prove how effective Redis truly is in a production environment.
+Though it serves as good quick display of it some of its speed increases.
