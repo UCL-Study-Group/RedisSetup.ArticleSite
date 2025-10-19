@@ -66,4 +66,17 @@ public class RedisContext
     {
         await _server.FlushAllDatabasesAsync();
     }
+    
+    /// <summary>
+    /// Added since, the other required admin mode enabled
+    /// </summary>
+    /// <param name="pattern"></param>
+    public async Task FlushByPatternAsync(string pattern = "cache:*")
+    {
+        var keys = _server.Keys(pattern: pattern);
+        foreach (var key in keys)
+        {
+            await _database.KeyDeleteAsync(key);
+        }
+    }
 }

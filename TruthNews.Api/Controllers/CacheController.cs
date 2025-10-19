@@ -14,7 +14,7 @@ public class CacheController : ControllerBase
         _cacheService = cacheService;
     }
     
-    [HttpPost]
+    [HttpDelete("Reset")]
     public async Task<ActionResult> ResetAsync()
     {
         try

@@ -3,6 +3,7 @@ services:
     image: redis:7-alpine
     restart: unless-stopped
     container_name: redis-database
+    command: redis-server --protected-mode no
     networks:
       - redis-network
     healthcheck:

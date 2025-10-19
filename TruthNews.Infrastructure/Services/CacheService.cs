@@ -41,6 +41,6 @@ public class CacheService
 
     public async Task ResetAsync()
     {
-        await _redisContext.FlushAsync();
+        await _redisContext.FlushByPatternAsync();
     }
 }
