@@ -14,8 +14,13 @@ public class CacheMiddleware
         _cacheService = cacheService;
     }
 
+    /// <summary>
+    /// This is the method it runs though when we make a request to the API
+    /// </summary>
     public async Task InvokeAsync(HttpContext context)
     {
+        // First off, I check if it is a GET Method, since it is the only
+        // methods we're interested in, when using caching
         if (context.Request.Method != HttpMethods.Get)
         {
             await _next(context);
@@ -34,12 +39,14 @@ public class CacheMiddleware
             return;
         }
         
+        // Here we make it into a cacheKey. It will be the one used on the redis database
         var cacheKey = GenerateCacheKey(context.Request);
         var totalStopwatch = Stopwatch.StartNew();
         
+        // We check if we have it in cache
         var cachedResponse = await _cacheService.GetAsync(cacheKey);
 
-        // Cache hit - return from Redis
+        // In case we do, we just respond with the response. No need for more :D
         if (!string.IsNullOrEmpty(cachedResponse))
         {
             totalStopwatch.Stop();
@@ -50,7 +57,7 @@ public class CacheMiddleware
             return;
         }
         
-        // Capture the response so we can cache it
+        // In case we don't. Then we can read the response and save it in cache, for the next time!
         var originalBodyStream = context.Response.Body;
         using var responseBody = new MemoryStream();
         context.Response.Body = responseBody;
@@ -62,7 +69,7 @@ public class CacheMiddleware
         responseBody.Seek(0, SeekOrigin.Begin);
         var responseText = await new StreamReader(responseBody).ReadToEndAsync();
         
-        // Cache it if successful
+        // We wouldn't want to save if it failed, so we check for status code!
         if (context.Response.StatusCode == 200 && !string.IsNullOrEmpty(responseText))
         {
             await _cacheService.SetAsync(cacheKey, responseText);
@@ -77,6 +84,12 @@ public class CacheMiddleware
         context.Response.Body = originalBodyStream;
     }
 
+    /// <summary>
+    /// Simple private method used for making the key into a cache key
+    /// Pssst it is the one we use for redis 
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     private static string GenerateCacheKey(HttpRequest request)
     {
         var path = request.Path.ToString().ToLowerInvariant();
@@ -85,6 +98,9 @@ public class CacheMiddleware
     }
 }
 
+/// <summary>
+/// This is so we can call it in our Program.cs
+/// </summary>
 public static class CacheMiddlewareExtensions
 {
     public static IApplicationBuilder UseCacheMiddleware(this IApplicationBuilder app)

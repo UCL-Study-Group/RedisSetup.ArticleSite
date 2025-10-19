@@ -11,8 +11,13 @@ namespace TruthNews.Infrastructure;
 
 public static class DependencyInjection
 {
+    /// <summary>
+    /// So apparently this is a way smarter way to use dependency injection for our
+    /// services... who knew!!! So I've decided to use it B)
+    /// </summary>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        // Since we're using Repo, we need to declare so it knows it is using MsSQL ;(
         GlobalConfiguration.Setup().UseSqlServer();
         
         var redisConnection = configuration["Redis_Connection"] ??  "localhost:6379";
