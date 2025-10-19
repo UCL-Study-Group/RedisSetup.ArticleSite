@@ -22,12 +22,14 @@ public class Program
         {
             app.MapOpenApi();
         }
+        
+        app.UseSwaggerUI();
 
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
-        app.UseRedis();
+        //.UseRedis();
 
         app.MapControllers();
 

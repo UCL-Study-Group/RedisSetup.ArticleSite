@@ -1,5 +1,5 @@
 services:
-  redis: 
+  redis:
     image: redis:7-alpine
     restart: unless-stopped
     container_name: redis-database
@@ -15,7 +15,7 @@ services:
     environment:
       - REDIS_PASSWORD=yourStrong(!)Password
       - REDIS_PORT=6379
-      
+  
   insight:
     image: redis/redisinsight
     restart: unless-stopped
@@ -34,41 +34,48 @@ services:
     image: mcr.microsoft.com/mssql/server:2025-latest
     restart: unless-stopped
     container_name: mssql-database
+    user: root
     healthcheck:
-      test: [ "CMD", "sqlcmd", "-S", "localhost", "-U", "sa", "-P", "yourStrong(!)Password", "-Q", "SELECT 1" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      test: [ "CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "Password123!", "-C", "-Q", "SELECT 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     networks:
       - redis-network
     ports:
       - 1433:1433
     volumes:
       - ./data/mssql-data:/var/opt/mssql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./entrypoint.sh:/entrypoint.sh:ro
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=Password123!
       - MSSQL_PID=Developer
+    entrypoint: /bin/bash /entrypoint.sh
 
-  api:
-    build:
-      context: .
-      dockerfile: TruthNews.Api/Dockerfile
-    restart: unless-stopped
-    container_name: truthnews-api
-    depends_on:
-      redis:
-        condition: service_healthy
-      mssql:
-        condition: service_healthy
-    ports:
-      - 43502:8080
-    networks:
-      - redis-network
-    environment:
-      - MsSql_Connection=Server=mssql,1433;Database=TruthNews;User Id=sa;Password=Password123!;TrustServerCertificate=True;
-      - Redis_Connection=redis:6379
-      
+# I commented it out, so we can debug on the side :P
+
+#  api:
+#    build:
+#      context: .
+#      dockerfile: TruthNews.Api/Dockerfile
+#    restart: unless-stopped
+#    container_name: truthnews-api
+#    depends_on:
+#      mssql-init:
+#        condition: service_completed_successfully
+#      redis:
+#        condition: service_healthy
+#    ports:
+#      - 43502:8080
+#    networks:
+#      - redis-network
+#    environment:
+#      - MsSql_Connection=Server=mssql,1433;Database=TruthNews;User Id=sa;Password=Password123!;TrustServerCertificate=True;
+#      - Redis_Connection=redis:6379
+
 networks:
   redis-network:
     driver: bridge
