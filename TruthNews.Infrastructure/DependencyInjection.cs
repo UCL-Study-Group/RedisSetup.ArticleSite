@@ -36,6 +36,7 @@ public static class DependencyInjection
         services.AddScoped<DbContext>();
 
         services.AddScoped<UserService>();
+        services.AddScoped<CacheService>();
         
         return services;
     }

@@ -17,7 +17,7 @@ namespace TruthNews.Common.Models;
 public class User
 {
     [Column("Id")]
-    public required string Id { get; set; }
+    public required int Id { get; set; }
     [Column("Name")]
     public required string Name { get; set; }
     [Column("Email")]

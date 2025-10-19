@@ -8,7 +8,7 @@ namespace TruthNews.Api.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly UserService  _userService;
+    private readonly UserService _userService;
 
     public UserController(UserService userService)
     {
@@ -16,9 +16,9 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetUsersAsync()
+    public async Task<ActionResult<IEnumerable<User>>> GetUsersAsync(CancellationToken cancellationToken)
     {
-        var response = await _userService.GetUsersAsync(CancellationToken.None);
+        var response = await _userService.GetUsersAsync(cancellationToken);
 
         if (!response.Any())
             return NoContent();
@@ -26,13 +26,13 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("/{id}")]
-    public async Task<ActionResult<User>> GetUserAsync([FromRoute] int userId)
+    [HttpGet("{id:int}")]  // Fixed route format
+    public async Task<ActionResult<User>> GetUserAsync([FromRoute] int id, CancellationToken cancellationToken)
     {
-        var response = await _userService.GetUserAsync(userId, CancellationToken.None);
+        var response = await _userService.GetUserAsync(id, cancellationToken);
 
         if (response is null)
-            return NoContent();
+            return NotFound();  // Changed from NoContent to NotFound
         
         return Ok(response);
     }

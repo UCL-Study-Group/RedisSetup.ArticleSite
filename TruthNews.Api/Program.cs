@@ -33,6 +33,8 @@ public class Program
         app.UseAuthorization();
         app.MapControllers();
 
+        app.UseCacheMiddleware();
+
         app.Run();
     }
 }
