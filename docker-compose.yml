@@ -27,7 +27,7 @@ services:
     ports:
       - 8085:5540
     environment:
-      - RI_REDIS_HOST=db
+      - RI_REDIS_HOST=redis
       - RI_REDIS_PORT=6379
   
   mssql:

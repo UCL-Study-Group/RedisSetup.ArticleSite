@@ -53,7 +53,7 @@ public class CacheMiddleware
         if (context.Response.StatusCode == 200 && !string.IsNullOrEmpty(responseText))
         {
             await _cacheService.SetAsync(cacheKey, responseText);
-            Console.WriteLine($"[RedisMiddleware] Cached response for key: {cacheKey}");
+            Console.WriteLine($"[CacheMiddleware] Cached response for key: {cacheKey}");
         }
         
         // Send the response to the client

@@ -5,7 +5,7 @@
 
 # Wait for SQL Server to start (increased wait time)
 echo "Waiting for SQL Server to start..."
-sleep 40s
+sleep 20s
 
 # Check if init.sql exists and run it
 if [ -f "/docker-entrypoint-initdb.d/init.sql" ]; then
