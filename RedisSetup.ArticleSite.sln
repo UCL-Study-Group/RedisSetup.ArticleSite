@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TruthNews.Api", "TruthNews.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TruthNews.Infrastructure", "TruthNews.Infrastructure\TruthNews.Infrastructure.csproj", "{C0714150-FDC9-4984-BD02-BF5D3171F14F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TruthNews.Common", "TruthNews.Common\TruthNews.Common.csproj", "{6A01FE25-3126-4121-B6CE-5DD0BE492DD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{C0714150-FDC9-4984-BD02-BF5D3171F14F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0714150-FDC9-4984-BD02-BF5D3171F14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0714150-FDC9-4984-BD02-BF5D3171F14F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A01FE25-3126-4121-B6CE-5DD0BE492DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A01FE25-3126-4121-B6CE-5DD0BE492DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A01FE25-3126-4121-B6CE-5DD0BE492DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A01FE25-3126-4121-B6CE-5DD0BE492DD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

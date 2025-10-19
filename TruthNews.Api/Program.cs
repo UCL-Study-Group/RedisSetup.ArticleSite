@@ -1,3 +1,6 @@
+using TruthNews.Api.Middleware;
+using TruthNews.Infrastructure;
+
 namespace TruthNews.Api;
 
 public class Program
@@ -6,10 +9,10 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
+        // Add services to the container
+        builder.Services.AddInfrastructure();
+        
         builder.Services.AddControllers();
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
         var app = builder.Build();
@@ -24,6 +27,7 @@ public class Program
 
         app.UseAuthorization();
 
+        app.UseRedis();
 
         app.MapControllers();
 
