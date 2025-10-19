@@ -1,7 +1,7 @@
 using System.Text.Json;
 using StackExchange.Redis;
 
-namespace TruthNews.Infrastructure.Services;
+namespace TruthNews.Infrastructure.Context;
 
 public class RedisContext
 {
