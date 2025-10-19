@@ -2,8 +2,10 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RepoDb;
 using StackExchange.Redis;
 using TruthNews.Infrastructure.Context;
+using TruthNews.Infrastructure.Services;
 
 namespace TruthNews.Infrastructure;
 
@@ -11,6 +13,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        GlobalConfiguration.Setup().UseSqlServer();
+        
         var redisConnection = configuration["Redis_Connection"] ??  "localhost:6379";
         var msConnection = configuration["MsSql_Connection"] ?? "Server=localhost,1433;Database=TruthNews;User Id=sa;Password=Password123!;TrustServerCertificate=True;";
         
@@ -30,6 +34,8 @@ public static class DependencyInjection
 
         services.AddScoped<IDbConnection>(ms => new SqlConnection(msConnection));
         services.AddScoped<DbContext>();
+
+        services.AddScoped<UserService>();
         
         return services;
     }

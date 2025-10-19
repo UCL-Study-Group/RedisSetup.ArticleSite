@@ -23,14 +23,14 @@ public class Program
             app.MapOpenApi();
         }
         
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/openapi/v1.json", "TruthNews API v1");
+            options.RoutePrefix = string.Empty; // Serve Swagger UI at the app's root
+        });
 
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
-        //.UseRedis();
-
         app.MapControllers();
 
         app.Run();

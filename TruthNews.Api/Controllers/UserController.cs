@@ -15,7 +15,7 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
-    [HttpGet("User")]
+    [HttpGet]
     public async Task<ActionResult<IEnumerable<User>>> GetUsersAsync()
     {
         var response = await _userService.GetUsersAsync(CancellationToken.None);
@@ -26,7 +26,7 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("User/{id}")]
+    [HttpGet("/{id}")]
     public async Task<ActionResult<User>> GetUserAsync([FromRoute] int userId)
     {
         var response = await _userService.GetUserAsync(userId, CancellationToken.None);
